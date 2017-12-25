@@ -1,0 +1,22 @@
+{
+  "name": "hippodrome-dapp",
+  "version": "0.0.1",
+  "description": "Simple dapp",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yohoho-ua/Hippodrome-Dapp.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yohoho-ua/Hippodrome-Dapp/issues"
+  },
+  "homepage": "https://github.com/yohoho-ua/Hippodrome-Dapp#readme",
+  "dependencies": {
+    "web3": "github:ethereum/web3.js"
+  }
+}
