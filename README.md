@@ -28,7 +28,8 @@ gOptions = {
 
 ### 2. Init node and install web3.js
 
-```npm init
+```
+npm init  
 npm install ethereum/web3.js --save
 ```
 
