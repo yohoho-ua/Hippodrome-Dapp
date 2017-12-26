@@ -1,6 +1,6 @@
 gOptions = {
     //Put contract address here
-    address: '0xa8f3e0b7b5365b10417b29d631cb1b6e830edb08',
+    address: '0x2851a84663fefa4a3221f1d6da919ea6eef8a411',
 
     //Put ABI here
     abi: [
@@ -40,6 +40,34 @@ gOptions = {
         {
             "constant": true,
             "inputs": [],
+            "name": "maxAmountOfBets",
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "constant": true,
+            "inputs": [],
+            "name": "raceId",
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "constant": true,
+            "inputs": [],
             "name": "numberOfBets",
             "outputs": [
                 {
@@ -66,20 +94,6 @@ gOptions = {
             "type": "function"
         },
         {
-            "constant": true,
-            "inputs": [],
-            "name": "maxAmountOfBets",
-            "outputs": [
-                {
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "payable": false,
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
             "constant": false,
             "inputs": [
                 {
@@ -94,13 +108,21 @@ gOptions = {
             "type": "function"
         },
         {
-            "constant": false,
-            "inputs": [],
-            "name": "resetData",
-            "outputs": [],
-            "payable": false,
-            "stateMutability": "nonpayable",
-            "type": "function"
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": false,
+                    "name": "horseWinner",
+                    "type": "uint256"
+                },
+                {
+                    "indexed": false,
+                    "name": "raceId",
+                    "type": "uint256"
+                }
+            ],
+            "name": "results",
+            "type": "event"
         },
         {
             "constant": false,
@@ -130,6 +152,11 @@ gOptions = {
             "inputs": [
                 {
                     "indexed": false,
+                    "name": "raceId",
+                    "type": "uint256"
+                },
+                {
+                    "indexed": false,
                     "name": "minimumBet",
                     "type": "uint256"
                 },
@@ -156,6 +183,15 @@ gOptions = {
             "constant": false,
             "inputs": [],
             "name": "kill",
+            "outputs": [],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "constant": false,
+            "inputs": [],
+            "name": "resetData",
             "outputs": [],
             "payable": false,
             "stateMutability": "nonpayable",
@@ -192,5 +228,4 @@ gOptions = {
             "type": "fallback"
         }
     ]
-    
   }

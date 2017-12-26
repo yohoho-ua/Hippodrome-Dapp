@@ -56,3 +56,9 @@ typings/
 
 # dotenv environment variables file
 .env
+
+# idea project settings files
+.idea/*
+
+# properties file
+properties.js
