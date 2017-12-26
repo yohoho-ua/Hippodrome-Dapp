@@ -81,7 +81,8 @@
 
     console.log(Hippo);
 
-    var hippoEvent = Hippo.hippoEvent({},'latest');
+	var hippoEvent = Hippo.hippoEvent({},'latest');
+	/* 
         Hippo.minimumBet(function(error, result){
             if(!error)
                 {
@@ -118,7 +119,7 @@
             else
                 console.error(error);
         });
-
+ */
 
     hippoEvent.watch(function(error, result){
         if (!error)
