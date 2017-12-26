@@ -50,16 +50,16 @@
         <input id="horseNumber" type="text">
         <button id="buttonBet">Bet!</button>
     </div>
-    <div><label for="maxBetInput">set max bet amount</label>
+    <div><label for="maxBetInput">Set max bet amount</label>
         <input id="maxBetInput" type="text">
 
 
         <button id="buttonTest">Set Max bet</button>
     </div>
-    <p id="minimumBet">minimumBet :</p>
-    <p id="totalBet">totalBet :</p>
-    <p id="numberOfBets">numberOfBets :</p>
-    <p id="maxAmountOfBets">maxAmountOfBets :</p>
+    <p id="minimumBet">Minimum Bet: </p>
+    <p id="totalBet">Total Bet: </p>
+    <p id="numberOfBets">Number of Bets: </p>
+    <p id="maxBetAmount">Max Bet amount: </p>
     <p id="acc"></p>
 </div>
 
@@ -85,7 +85,7 @@
         Hippo.minimumBet(function(error, result){
             if(!error)
                 {
-                    $("#minimumBet").html("minimumBet:" + result);
+                    $("#minimumBet").html("Minimum Bet: " + result);
                     console.log("result: " + result);
                 }
             else
@@ -94,7 +94,7 @@
         Hippo.totalBet(function(error, result){
             if(!error)
                 {
-                    $("#totalBet").html("totalBet:" + result);
+                    $("#totalBet").html("Total Bet: " + result);
                     console.log("result: " + result);
                 }
             else
@@ -103,16 +103,16 @@
         Hippo.numberOfBets(function(error, result){
             if(!error)
                 {
-                    $("#numberOfBets").html("numberOfBets:" + result);
+                    $("#numberOfBets").html("Number of Bets: " + result);
                     console.log("result: " + result);
                 }
             else
                 console.error(error);
         });
-        Hippo.maxAmountOfBets(function(error, result){
+        Hippo.maxBetAmount(function(error, result){
             if(!error)
                 {
-                    $("#maxAmountOfBets").html("maxAmountOfBets:" + result);
+                    $("#maxBetAmount").html("Max Bet amount: " + result);
                     console.log("result: " + result);
                 }
             else
@@ -124,11 +124,11 @@
         if (!error)
         {  console.log("bla bla");
             $("#loader").hide();
-            $("#minimumBet").html("minimumBet:" + result.args.minimumBet);
-            $("#totalBet").html("totalBet:" + result.args.totalBet);
-            $("#numberOfBets").html("numberOfBets:" + result.args.numberOfBets);
-            $("#maxAmountOfBets").html("maxAmountOfBets:" + result.args.maxAmountOfBets);
-            $("#acc").html("current account:" + web3.eth.defaultAccount);
+            $("#minimumBet").html("Minimum Bet: " + result.args.minimumBet);
+            $("#totalBet").html("Total Bet: " + result.args.totalBet);
+            $("#numberOfBets").html("Number of Bets: " + result.args.numberOfBets);
+            $("#maxBetAmount").html("Max Bet amount: " + result.args.maxBetAmount);
+            $("#acc").html("Current account: " + web3.eth.defaultAccount);
         } else {
             console.log(error);
         }
@@ -169,7 +169,7 @@
     });
 
     $("#buttonTest").click(function() {
-        Hippo.setMaxAmountOfBets($("#maxBetInput").val(), {
+        Hippo.setMaxBetAmount($("#maxBetInput").val(), {
         });
     });
 

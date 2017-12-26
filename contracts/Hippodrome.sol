@@ -24,7 +24,7 @@ contract Hippodrome is Owned {
 uint public minimumBet;
 uint public totalBet;
 uint public numberOfBets;
-uint public maxAmountOfBets = 10;
+uint public maxBetAmount = 10;
 address[] players;
 
 struct Player {
@@ -45,13 +45,13 @@ event hippoEvent(
     uint minimumBet,
     uint totalBet,
     uint numberOfBets,
-    uint maxAmountOfBets
+    uint maxBetAmount
     );
     
 
-function setMaxAmountOfBets(uint _maxAmountOfBets) onlyOwner public {
-       maxAmountOfBets = _maxAmountOfBets;
-       hippoEvent(minimumBet, totalBet, numberOfBets, maxAmountOfBets);
+function setMaxBetAmount(uint _maxBetAmount) onlyOwner public {
+    maxBetAmount = _maxBetAmount;
+       hippoEvent(minimumBet, totalBet, numberOfBets, maxBetAmount);
    }
 
 // To bet for a horse between 1 and 5 both inclusive
@@ -66,8 +66,8 @@ function bet(uint horseNumber) payable {
    numberOfBets += 1;
    players.push(msg.sender);
    totalBet += msg.value;
-   if(numberOfBets >= maxAmountOfBets) generateHorseWinner();
-   hippoEvent(minimumBet, totalBet, numberOfBets, maxAmountOfBets);
+   if(numberOfBets >= maxBetAmount) generateHorseWinner();
+   hippoEvent(minimumBet, totalBet, numberOfBets, maxBetAmount);
 }
 
 function checkPlayerExists(address player) constant returns(bool) {
