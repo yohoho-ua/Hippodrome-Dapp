@@ -50,7 +50,7 @@
         <input id="horseNumber" type="text">
         <button id="buttonBet">Bet!</button>
     </div>
-    <div><label for="maxBetInput">Set max bet amount</label>
+    <div><label for="maxBetInput">Set max amount of bets </label>
         <input id="maxBetInput" type="text">
 
 
@@ -59,7 +59,7 @@
     <p id="minimumBet">Minimum Bet: </p>
     <p id="totalBet">Total Bet: </p>
     <p id="numberOfBets">Number of Bets: </p>
-    <p id="maxBetAmount">Max Bet amount: </p>
+    <p id="maxAmountOfBets">Max amount of bets:  </p>
     <p id="acc"></p>
 </div>
 
@@ -109,10 +109,10 @@
             else
                 console.error(error);
         });
-        Hippo.maxBetAmount(function(error, result){
+        Hippo.maxAmountOfBets(function(error, result){
             if(!error)
                 {
-                    $("#maxBetAmount").html("Max Bet amount: " + result);
+                    $("#maxAmountOfBets").html("Max amount of Bets: " + result);
                     console.log("result: " + result);
                 }
             else
@@ -127,7 +127,7 @@
             $("#minimumBet").html("Minimum Bet: " + result.args.minimumBet);
             $("#totalBet").html("Total Bet: " + result.args.totalBet);
             $("#numberOfBets").html("Number of Bets: " + result.args.numberOfBets);
-            $("#maxBetAmount").html("Max Bet amount: " + result.args.maxBetAmount);
+            $("#maxAmountOfBets").html("Max amount of Bets: " + result.args.maxAmountOfBets);
             $("#acc").html("Current account: " + web3.eth.defaultAccount);
         } else {
             console.log(error);
@@ -169,7 +169,7 @@
     });
 
     $("#buttonTest").click(function() {
-        Hippo.setMaxBetAmount($("#maxBetInput").val(), {
+        Hippo.setMaxAmountOfBets($("#maxBetInput").val(), {
         });
     });
 
