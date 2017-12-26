@@ -1,9 +1,9 @@
 gOptions = {
     //Put contract address here
-    address: '0xa8f3e0b7b5365b10417b29d631cb1b6e830edb08',
+    address: '0x3952be8b7187beeec5756e21869bcfeb9e948493',
 
     //Put ABI here
-    abi: [
+    abi:[
         {
             "constant": true,
             "inputs": [],
@@ -80,6 +80,52 @@ gOptions = {
             "type": "function"
         },
         {
+            "constant": true,
+            "inputs": [],
+            "name": "getSelectedHorses",
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "uint256[5]"
+                }
+            ],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": false,
+                    "name": "minimumBet",
+                    "type": "uint256"
+                },
+                {
+                    "indexed": false,
+                    "name": "totalBet",
+                    "type": "uint256"
+                },
+                {
+                    "indexed": false,
+                    "name": "numberOfBets",
+                    "type": "uint256"
+                },
+                {
+                    "indexed": false,
+                    "name": "maxAmountOfBets",
+                    "type": "uint256"
+                },
+                {
+                    "indexed": false,
+                    "name": "numberOfSelections",
+                    "type": "uint256"
+                }
+            ],
+            "name": "hippoEvent",
+            "type": "event"
+        },
+        {
             "constant": false,
             "inputs": [
                 {
@@ -126,31 +172,20 @@ gOptions = {
             "type": "function"
         },
         {
-            "anonymous": false,
             "inputs": [
                 {
-                    "indexed": false,
-                    "name": "minimumBet",
-                    "type": "uint256"
-                },
-                {
-                    "indexed": false,
-                    "name": "totalBet",
-                    "type": "uint256"
-                },
-                {
-                    "indexed": false,
-                    "name": "numberOfBets",
-                    "type": "uint256"
-                },
-                {
-                    "indexed": false,
-                    "name": "maxAmountOfBets",
+                    "name": "_minimumBet",
                     "type": "uint256"
                 }
             ],
-            "name": "hippoEvent",
-            "type": "event"
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "constructor"
+        },
+        {
+            "payable": true,
+            "stateMutability": "payable",
+            "type": "fallback"
         },
         {
             "constant": false,
@@ -176,20 +211,16 @@ gOptions = {
             "type": "function"
         },
         {
+            "anonymous": false,
             "inputs": [
                 {
-                    "name": "_minimumBet",
+                    "indexed": false,
+                    "name": "horseNumber",
                     "type": "uint256"
                 }
             ],
-            "payable": false,
-            "stateMutability": "nonpayable",
-            "type": "constructor"
-        },
-        {
-            "payable": true,
-            "stateMutability": "payable",
-            "type": "fallback"
+            "name": "horseSelectedEvent",
+            "type": "event"
         }
     ]
   }

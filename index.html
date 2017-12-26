@@ -39,6 +39,13 @@
             <td>4</td>
             <td>5</td>
         </tr>
+			<tr>
+                <td><p id="horse1" class="horse_number"></p></td>
+                <td><p id="horse2" class="horse_number"></p></td>
+                <td><p id="horse3" class="horse_number"></p></td>
+                <td><p id="horse4" class="horse_number"></p></td>
+                <td><p id="horse5" class="horse_number"></p></td>
+        </tr>
         </tbody>
     </table>
     <!--<img id="loader" src="https://loading.io/spinners/double-ring/lg.double-ring-spinner.gif">-->
@@ -72,7 +79,7 @@
         // set the provider you want from Web3.providers
         web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
     }
-    web3.eth.defaultAccount = web3.eth.accounts[0];
+        web3.eth.defaultAccount = web3.eth.accounts[2];
     // web3.eth.defaultAccount =  window.web3.eth.defaultAccount;
    { var HippoContract = web3.eth.contract(gOptions.abi);
    }
@@ -82,7 +89,34 @@
     console.log(Hippo);
 
 	var hippoEvent = Hippo.hippoEvent({},'latest');
-	/* 
+    hippoEvent.watch(function(error, result){
+        if (!error)
+        {  console.log("bla bla");
+            $("#loader").hide();
+            $("#minimumBet").html("Minimum Bet: " + result.args.minimumBet);
+            $("#totalBet").html("Total Bet: " + result.args.totalBet);
+            $("#numberOfBets").html("Number of Bets: " + result.args.numberOfBets);
+            $("#maxAmountOfBets").html("Max amount of Bets: " + result.args.maxAmountOfBets);
+            $("#horse"+$("#horseNumber").val()).html("Horse was selected "+ result.args.numberOfSelections);
+            $("#acc").html("Current account: " + web3.eth.defaultAccount);
+        } else {
+            console.log(error);
+        }
+    });
+
+    Hippo.getSelectedHorses(function(error, result){
+        if(!error) {
+         for (var i=0; i<5; i++) {
+             $("#horse"+(i+1)).html("Horse was selected " + result[i] +" times");
+             console.log("horse "+i +" was shown")
+         }
+       }
+       else{
+           console.log("horse error")
+       }
+    });
+
+    /*
         Hippo.minimumBet(function(error, result){
             if(!error)
                 {
@@ -121,19 +155,7 @@
         });
  */
 
-    hippoEvent.watch(function(error, result){
-        if (!error)
-        {  console.log("bla bla");
-            $("#loader").hide();
-            $("#minimumBet").html("Minimum Bet: " + result.args.minimumBet);
-            $("#totalBet").html("Total Bet: " + result.args.totalBet);
-            $("#numberOfBets").html("Number of Bets: " + result.args.numberOfBets);
-            $("#maxAmountOfBets").html("Max amount of Bets: " + result.args.maxAmountOfBets);
-            $("#acc").html("Current account: " + web3.eth.defaultAccount);
-        } else {
-            console.log(error);
-        }
-    });
+
 
    /*  var maxInputsEvent = Hippo.maxInputs({},'latest');
     maxInputsEvent.watch(function(error, result){
