@@ -15,7 +15,13 @@
 <body>
 <div class="container">
 
-    <h1>Hippodrome</h1>
+	<h1>Hippodrome</h1> 
+	<select id="select">
+			<option value="0">account 1</option>
+			<option value="1">account 2</option>
+			<option value="2">account 3</option>
+		  </select>
+
     <table align="left" width="120" border="1">
         <tbody>
         <tr>
@@ -23,7 +29,7 @@
             <td>Wind</td>
             <td>Speedy</td>
             <td>Winner</td>
-            <td>Cutie</td>
+			<td>Cutie</td>
         </tr>
         <tr>
             <td><img src="images/unicorn.jpg" width="200" height="119" alt=""/></td>
@@ -43,6 +49,7 @@
     </table>
     <!--<img id="loader" src="https://loading.io/spinners/double-ring/lg.double-ring-spinner.gif">-->
     <h1 id="error" hidden>Error!</h1>
+    <h1 id="winner" hidden></h1>
 
 
     <div>
@@ -61,18 +68,29 @@
     <p id="numberOfBets">Number of Bets: </p>
     <p id="maxAmountOfBets">Max amount of bets:  </p>
     <p id="acc"></p>
+    <p id="raceId"></p>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
 
 <script>
+	//only for test for fast switching accounts
+	var currentPlayer = 0;
+	$(document).ready(function(){
+	$("#select" ).on('change', function() { 
+	currentPlayer = $(this).val();
+	web3.eth.defaultAccount = web3.eth.accounts[currentPlayer]
+  	})
+	});
+	
+
     if (typeof web3 !== 'undefined') {
         web3 = new Web3(web3.currentProvider);
     } else {
         // set the provider you want from Web3.providers
         web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
     }
-    web3.eth.defaultAccount = web3.eth.accounts[0];
+    web3.eth.defaultAccount = web3.eth.accounts[currentPlayer];
     // web3.eth.defaultAccount =  window.web3.eth.defaultAccount;
    { var HippoContract = web3.eth.contract(gOptions.abi);
    }
@@ -82,6 +100,7 @@
     console.log(Hippo);
 
 	var hippoEvent = Hippo.hippoEvent({},'latest');
+	var resultsEvent = Hippo.results({},'latest');
 	/* 
         Hippo.minimumBet(function(error, result){
             if(!error)
@@ -123,17 +142,29 @@
 
     hippoEvent.watch(function(error, result){
         if (!error)
-        {  console.log("bla bla");
+        {  console.log("hippoEvent");
             $("#loader").hide();
             $("#minimumBet").html("Minimum Bet: " + result.args.minimumBet);
-            $("#totalBet").html("Total Bet: " + result.args.totalBet);
+            $("#totalBet").html("Total Bet: " +  web3.fromWei(result.args.totalBet, 'ether') + " Eth.");
             $("#numberOfBets").html("Number of Bets: " + result.args.numberOfBets);
             $("#maxAmountOfBets").html("Max amount of Bets: " + result.args.maxAmountOfBets);
-            $("#acc").html("Current account: " + web3.eth.defaultAccount);
+			$("#acc").html("Current account: " + web3.eth.defaultAccount);
+			$("#raceId").html("Current race id: " + result.args.raceId);
         } else {
             console.log(error);
         }
-    });
+	});
+
+	resultsEvent.watch(function(error, result){
+        if (!error)
+        {  console.log("resultsEvent");
+            $("#winner").show();
+            $("#winner").html("Race id [" + result.args.raceId + "] winner is horse number - " + result.args.horseWinner);
+        } else {
+            console.log(error);
+        }
+	});
+	
 
    /*  var maxInputsEvent = Hippo.maxInputs({},'latest');
     maxInputsEvent.watch(function(error, result){
@@ -153,7 +184,8 @@
 
 
     $("#buttonBet").click(function() {
-        $("#loader").show();
+		$("#loader").show();
+		$("#winner").hide();
         try {
         Hippo.bet($("#horseNumber").val(), {
             gas: 300000,
@@ -170,6 +202,7 @@
     });
 
     $("#buttonTest").click(function() {
+		$("#winner").hide();
         Hippo.setMaxAmountOfBets($("#maxBetInput").val(), {
         });
     });

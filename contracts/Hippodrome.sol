@@ -21,6 +21,7 @@ contract Hippodrome is Owned {
 
    address owner;
 
+uint public raceId = 0;
 uint public minimumBet;
 uint public totalBet;
 uint public numberOfBets;
@@ -42,16 +43,21 @@ function Hippodrome(uint _minimumBet) {
 }
 
 event hippoEvent(
+    uint raceId,
     uint minimumBet,
     uint totalBet,
     uint numberOfBets,
     uint maxAmountOfBets
     );
     
+event results (
+    uint horseWinner,
+    uint raceId
+    );
 
 function setMaxAmountOfBets(uint _maxAmountOfBets) onlyOwner public {
-    maxAmountOfBets = _maxAmountOfBets;
-       hippoEvent(minimumBet, totalBet, numberOfBets, maxAmountOfBets);
+       maxAmountOfBets = _maxAmountOfBets;
+       hippoEvent(raceId, minimumBet, totalBet, numberOfBets, maxAmountOfBets);
    }
 
 // To bet for a horse between 1 and 5 both inclusive
@@ -67,7 +73,7 @@ function bet(uint horseNumber) payable {
    players.push(msg.sender);
    totalBet += msg.value;
    if(numberOfBets >= maxAmountOfBets) generateHorseWinner();
-   hippoEvent(minimumBet, totalBet, numberOfBets, maxAmountOfBets);
+   hippoEvent(raceId, minimumBet, totalBet, numberOfBets, maxAmountOfBets);
 }
 
 function checkPlayerExists(address player) constant returns(bool) {
@@ -99,9 +105,11 @@ function distributePrizes(uint horseNumberWinner) {
    players.length = 0; // Delete all the players array
    uint winnerEtherAmount = totalBet / winners.length; // How much each winner gets
    for(uint j = 0; j < count; j++) {
-      if(winners[j] != address(0)) // Check that the address in this fixed array is not empty
+      if(winners[j] != address(0)) // Check at least one winner exists
          winners[j].transfer(winnerEtherAmount);
    }
+   results (horseNumberWinner, raceId);
+   raceId++;
 }
 
 function resetData(){
