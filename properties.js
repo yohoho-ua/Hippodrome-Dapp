@@ -1,6 +1,6 @@
 gOptions = {
     //Put contract address here
-    address: '0xa8ad1f4d847e5725edabbe16918519ea46f59de1',
+    address: '0x4dcdb8903509c50372b9a4a7b1e25519fe36d04b',
 
     //Put ABI here
     abi: [
@@ -68,7 +68,7 @@ gOptions = {
         {
             "constant": true,
             "inputs": [],
-            "name": "maxBetAmount",
+            "name": "maxAmountOfBets",
             "outputs": [
                 {
                     "name": "",
@@ -145,7 +145,7 @@ gOptions = {
                 },
                 {
                     "indexed": false,
-                    "name": "maxBetAmount",
+                    "name": "maxAmountOfBets",
                     "type": "uint256"
                 }
             ],
@@ -165,11 +165,11 @@ gOptions = {
             "constant": false,
             "inputs": [
                 {
-                    "name": "_maxBetAmount",
+                    "name": "_maxAmountOfBets",
                     "type": "uint256"
                 }
             ],
-            "name": "setMaxBetAmount",
+            "name": "setMaxAmountOfBets",
             "outputs": [],
             "payable": false,
             "stateMutability": "nonpayable",
