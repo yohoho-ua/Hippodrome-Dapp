@@ -122,6 +122,7 @@ contract Hippodrome is Owned {
         }
         players.length = 0;
         // Delete all the players array
+        _deleteSelectedHorses();
         uint winnerEtherAmount = totalBet / winners.length;
         // How much each winner gets
         for (uint j = 0; j < count; j++) {
@@ -130,6 +131,11 @@ contract Hippodrome is Owned {
         }
         results(horseNumberWinner, raceId);
         raceId++;
+    }
+    function _deleteSelectedHorses() private{
+        for (uint i = 0; i<selectedHorses.length; i++){
+            selectedHorses[i] = 0;
+        }
     }
 
     function resetData(){

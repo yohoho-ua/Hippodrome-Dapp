@@ -1,6 +1,6 @@
 gOptions = {
     //Put contract address here
-    address: '0x72476a865704704d3091448448d6f04ef63898bf',
+    address: '0x646835e23758453638711a5e2396aa30c418cfa5',
 
     //Put ABI here
     abi: [

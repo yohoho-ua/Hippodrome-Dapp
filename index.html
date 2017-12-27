@@ -31,12 +31,12 @@
             <td>Winner</td>
 			<td>Cutie</td>
         </tr>
-        <tr>
-            <td><img src="images/unicorn.jpg" width="200" height="119" alt=""/></td>
-            <td><img src="images/grey.jpg" width="200" height="119" alt=""/></td>
-            <td><img src="images/brown.jpg" width="200" height="119" alt=""/></td>
-            <td><img src="images/white.jpg" width="200" height="119" alt=""/></td>
-            <td><img src="images/black.jpg" width="200" height="119" alt=""/></td>
+        <tr class="horse_number">
+            <td ><input type="image" src="images/unicorn.jpg" style="width:200px; height:119px;" value="1" onclick="selHorse()"/></td>
+            <td ><input type="image" src="images/grey.jpg" style="width:200px; height:119px;" value="2" onclick="selHorse()"/></td>
+            <td ><input type="image" src="images/brown.jpg" style="width:200px; height:119px;" value="3" onclick="selHorse()"/></td>
+            <td ><input type="image" src="images/white.jpg" style="width:200px; height:119px;" value="4" onclick="selHorse()"/></td>
+            <td><input type="image" src="images/black.jpg" style="width:200px; height:119px;" value="5" onclick="selHorse()"/></td>
         </tr>
         <tr>
             <td>1</td>
@@ -46,11 +46,11 @@
             <td>5</td>
         </tr>
         <tr>
-        <td><p id="horse1" class="horse_number"></p></td>
-        <td><p id="horse2" class="horse_number"></p></td>
-        <td><p id="horse3" class="horse_number"></p></td>
-        <td><p id="horse4" class="horse_number"></p></td>
-        <td><p id="horse5" class="horse_number"></p></td>
+        <td><p id="horse1" class="horses"></p></td>
+        <td><p id="horse2" class="horses"></p></td>
+        <td><p id="horse3" class="horses"></p></td>
+        <td><p id="horse4" class="horses"></p></td>
+        <td><p id="horse5" class="horses"></p></td>
         </tr>
         </tbody>
     </table>
@@ -60,9 +60,9 @@
 
 
     <div>
-        <label for="horseNumber">Select horse</label>
-        <input id="horseNumber" type="text">
-        <button id="buttonBet">Bet!</button>
+        <!--<label for="horseNumber">Select horse</label>-->
+        <!--<input id="horseNumber" type="text">-->
+        <button id="buttonBet" disabled>Bet!</button>
     </div>
     <div><label for="maxBetInput">Set max amount of bets </label>
         <input id="maxBetInput" type="text">
@@ -83,6 +83,7 @@
 <script>
 	//only for test for fast switching accounts
 	var currentPlayer = 0;
+    var horseNumber;
 	$(document).ready(function(){
 	$("#select" ).on('change', function() { 
 	currentPlayer = $(this).val();
@@ -105,10 +106,26 @@
     var Hippo = HippoContract.at(gOptions.address);
 
     console.log(Hippo);
+    function selHorse() {
+        $('.horse_number').on('click', function(e){
+           horseNumber = e.target.value;
+           var ifExist = Hippo.checkPlayerExists((web3.eth.defaultAccount),{});
+           document.getElementById("buttonBet").disabled = ifExist;
+        console.log("value of horse " +horseNumber)});
+    }
+
+
+    // $(document).ready(function() {
+    //     $(".horse_number").click(function () {
+    //         // нужный блок выбирается относительно this как предыдущий (prev)
+    //         var textBlock =  $(this).find()
+    //         alert(textBlock);
+    //     });
+    // });
 
 	var hippoEvent = Hippo.hippoEvent({},'latest');
 	var resultsEvent = Hippo.results({},'latest');
-	/* 
+	/*
         Hippo.minimumBet(function(error, result){
             if(!error)
                 {
@@ -167,7 +184,7 @@
             $("#numberOfBets").html("Number of Bets: " + result.args.numberOfBets);
             $("#maxAmountOfBets").html("Max amount of Bets: " + result.args.maxAmountOfBets);
 			$("#acc").html("Current account: " + web3.eth.defaultAccount);
-            $("#horse"+$("#horseNumber").val()).html("Horse was selected "+ result.args.numberOfSelections);
+            $("#horse"+horseNumber).html("Horse was selected "+ result.args.numberOfSelections);
             $("#raceId").html("Current race id: " + result.args.raceId);
         } else {
             console.log(error);
@@ -206,17 +223,21 @@
 		$("#loader").show();
 		$("#winner").hide();
         try {
-        Hippo.bet($("#horseNumber").val(), {
+        Hippo.bet((horseNumber), {
             gas: 300000,
             from: web3.eth.defaultAccount,
             value: web3.toWei(1, 'ether')
-        });}
+        });
+        document.getElementById("buttonBet").disabled = true;
+        var temp = document.getElementsByClassName("horse_number");
+        temp.disabled=true;
+            alert("You have made your bet! Horse № " +horseNumber + " was selected!");
+            }
         catch (error){
-            $("#loader").hide();
 
             $("#error").html("Error!!");
-            alert("You have made your bet!");
-            console.log("Error!!Please wait to a prize drawing!");
+            alert("You have made your bet! Horse № " +horseNumber + " was selected!");
+            console.log("Error!!" +horseNumber);
         }
     });
 

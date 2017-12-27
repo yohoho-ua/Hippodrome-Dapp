@@ -26,3 +26,12 @@ button {
 .horse_number {
     font-size: smaller;
 }
+.horses {
+    font-size: smaller;
+}
+
+input:focus {
+    border: 3px solid orange;
+    box-shadow: 1px 1px 1px 0 red;
+}
+
