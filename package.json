@@ -18,5 +18,6 @@
   "homepage": "https://github.com/yohoho-ua/Hippodrome-Dapp#readme",
   "dependencies": {
     "web3": "github:ethereum/web3.js"
-  }
+  },
+  "devDependencies": {}
 }
