@@ -90,7 +90,7 @@
         // set the provider you want from Web3.providers
         web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
     }
-    web3.eth.defaultAccount = web3.eth.accounts[currentPlayer];
+    web3.eth.defaultAccount = web3.eth.accounts[0];
     // web3.eth.defaultAccount =  window.web3.eth.defaultAccount;
    { var HippoContract = web3.eth.contract(gOptions.abi);
    }
@@ -164,48 +164,47 @@
             console.log(error);
         }
 	});
-	
 
-   /*  var maxInputsEvent = Hippo.maxInputs({},'latest');
-    maxInputsEvent.watch(function(error, result){
-        if (!error)
-        {  console.log("bla bla");
-            $("#loader").hide();
-            // $("#minimumBet").html("minimumBet:" + result.args.minimumBet);
-            // $("#totalBet").html("totalBet:" + result.args.totalBet);
-            // $("#numberOfBets").html("numberOfBets:" + result.args.numberOfBets);
-            $("#maxAmountOfBets").html("maxAmountOfBets:" + result.args.maxAmountOfBets);
-              $("#acc").html("current account:" + web3.eth.defaultAccount);
-        } else {
-            $("#loader").hide();
-            console.log(error);
-        }
-    }); */
 
 
     $("#buttonBet").click(function() {
 		$("#loader").show();
 		$("#winner").hide();
-        try {
-        Hippo.bet($("#horseNumber").val(), {
-            gas: 300000,
-            from: web3.eth.defaultAccount,
-            value: web3.toWei(1, 'ether')
-        });}
-        catch (error){
-            $("#loader").hide();
+		console.log(web3.eth.defaultAccount);
+		voteHorse($("#horseNumber").val())
+	});
+    
 
+   function voteHorse(number) {
+   Hippo.bet($("#horseNumber").val(), 
+   		{
+	   	value: web3.toWei(0.01, 'ether'), 
+		gas: 300000
+		}, 
+   		(err, result) =>{
+			if(result != null) {
+				console.log(result);
+			} else {
+			$("#loader").hide();
             $("#error").html("Error!!");
             alert("You have made your bet!");
-            console.log("Error!!Please wait to a prize drawing!");
-        }
-    });
+            console.log(error);
+			}
+		   })
+   }
+   
+	
 
-    $("#buttonTest").click(function() {
-		$("#winner").hide();
-        Hippo.setMaxAmountOfBets($("#maxBetInput").val(), {
-        });
-    });
+	$("#buttonTest").click(function() {
+		Hippo.setMaxAmountOfBets($("#maxBetInput").val(), (err, res) => {
+		if (err) {
+			$("#loader").hide();
+			console.log(err);
+	 			}
+	});
+});
+
+
 
 </script>
 
