@@ -45,6 +45,13 @@
             <td>4</td>
             <td>5</td>
         </tr>
+        <tr>
+        <td><p id="horse1" class="horse_number"></p></td>
+        <td><p id="horse2" class="horse_number"></p></td>
+        <td><p id="horse3" class="horse_number"></p></td>
+        <td><p id="horse4" class="horse_number"></p></td>
+        <td><p id="horse5" class="horse_number"></p></td>
+        </tr>
         </tbody>
     </table>
     <!--<img id="loader" src="https://loading.io/spinners/double-ring/lg.double-ring-spinner.gif">-->
@@ -139,6 +146,17 @@
                 console.error(error);
         });
  */
+    Hippo.getSelectedHorses(function(error, result){
+        if(!error) {
+            for (var i=0; i<5; i++) {
+                $("#horse"+(i+1)).html("Horse was selected " + result[i] +" times");
+                console.log("horse "+i +" was shown")
+            }
+        }
+        else{
+            console.log("horse error")
+        }
+    });
 
     hippoEvent.watch(function(error, result){
         if (!error)
@@ -149,7 +167,8 @@
             $("#numberOfBets").html("Number of Bets: " + result.args.numberOfBets);
             $("#maxAmountOfBets").html("Max amount of Bets: " + result.args.maxAmountOfBets);
 			$("#acc").html("Current account: " + web3.eth.defaultAccount);
-			$("#raceId").html("Current race id: " + result.args.raceId);
+            $("#horse"+$("#horseNumber").val()).html("Horse was selected "+ result.args.numberOfSelections);
+            $("#raceId").html("Current race id: " + result.args.raceId);
         } else {
             console.log(error);
         }
