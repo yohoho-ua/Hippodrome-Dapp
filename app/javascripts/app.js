@@ -106,20 +106,26 @@ window.App = {
 
   bet: function () {
     var self = this
-
     var horseNumber = parseInt(document.getElementById('horseNumber').value)
-    // var receiver = document.getElementById("receiver").value;
-
     this.setStatus('Initiating transaction... (please wait)')
-
-    var hippo
-    Hippodrome.deployed().then(function (instance) {
-      hippo = instance
-      return hippo.bet(horseNumber, web3.toWei(1, 'ether'), {
-        from: account
-      })
-    }).then(function (result) {
-      self.setStatus('Transaction complete!')
+    hippo.bet(horseNumber, {from: account})
+    .then(function(result){
+     self.setStatus('Transaction complete!')
+     self.updateAll(result)
+    })
+    .catch(function (e) {
+     console.log(e)
+     self.setStatus('Error sending transaction; see log.')
+    })
+    },
+    // var hippo
+    // Hippodrome.deployed().then(function (instance) {
+    //   hippo = instance
+    //   return hippo.bet(horseNumber, web3.toWei(1, 'ether'), {
+    //     from: account
+    //   })
+    // }).then(function (result) {
+    //   self.setStatus('Transaction complete!')
       // result is an object with the following values:
       //
       // result.tx      => transaction hash, string
@@ -127,19 +133,19 @@ window.App = {
       // result.receipt => transaction receipt object, which includes gas used
 
       // We can loop through result.logs to see if we triggered the Transfer event.
-      for (var i = 0; i < result.logs.length; i++) {
-        var log = result.logs[i]
-        if (log.event == 'HippoEvent') {
-          // We found the event!
-          console.log(log)
-          break
-        }
-      }
-    }).catch(function (e) {
-      console.log(e)
-      self.setStatus('Error sending transaction; see log.')
-    })
-  },
+  //     for (var i = 0; i < result.logs.length; i++) {
+  //       var log = result.logs[i]
+  //       if (log.event == 'HippoEvent') {
+  //         // We found the event!
+  //         console.log(log)
+  //         break
+  //       }
+  //     }
+  //   }).catch(function (e) {
+  //     console.log(e)
+  //     self.setStatus('Error sending transaction; see log.')
+  //   })
+  // },
 
   updateAll: function (result) {
     for (var i = 0; i < result.logs.length; i++) {
