@@ -24,7 +24,7 @@ window.App = {
     var self = this
 
     // Bootstrap the MetaCoin abstraction for Use.
-    Hippodrome.setProvider(web3.currentProvider)
+    Hippodrome.setProvider(web3.currentProvider);
 
     // Get the initial account balance so it can be displayed.
     web3.eth.getAccounts(function (err, accs) {
@@ -41,19 +41,19 @@ window.App = {
       accounts = accs
       account = accounts[0]
       console.log(account)
-    })
+    });
 
     //self.updateMaxPlayers()
     //self.updateCurrentAcc()
     // self.refreshAccount();
-    var hippoEvent = Hippodrome.HippoEvent({}, 'latest')
-    hippoEvent.watch(function (error, result) {
-      if (!error) {
-        console.log('hippoEvent')
-      } else {
-        console.log(error)
-      }
-    })
+    // var hippoEvent = Hippodrome.HippoEvent({}, 'latest');
+    // hippoEvent.watch(function (error, result) {
+    //   if (!error) {
+    //     console.log('hippoEvent');
+    //   } else {
+    //     console.log(error);
+    //   }
+    // });
   },
 
   setStatus: function (message) {
@@ -98,14 +98,17 @@ window.App = {
         var log = result.logs[i]
         if (log.event == 'HippoEvent') {
           // We found the event!
-          console.log(log.args._maxPlayers)
-          break
+          var value = log.args._maxPlayers.c[0];
+          console.log(value);
+          var maxplayers_element = document.getElementById('maxplayers');
+          maxplayers_element.innerHTML = value.valueOf();
+          break;
         }
       }
     }).catch(function (e) {
       console.log(e)
       self.setStatus('Error sending transaction; see log.')
-    })
+    });
   },
 
   bet: function () {
@@ -136,7 +139,7 @@ window.App = {
         if (log.event == 'HippoEvent') {
           // We found the event!
           console.log(log)
-          break
+          break;
         }
       }
     }).catch(function (e) {
