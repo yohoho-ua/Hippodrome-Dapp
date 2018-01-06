@@ -64,6 +64,32 @@ window.App = {
     //     console.log(error);
     //   }
     // });
+
+
+      var amount = parseInt(document.getElementById('maxPlayersInput').value)
+      this.setStatus('Initiating transaction... (please wait)')
+
+      hippo.minimumBet(amount, { from: account })
+      .then(function (result) {
+        self.setStatus('Transaction complete!')
+        self.updateAll(result)
+
+        /* for (var i = 0; i < result.logs.length; i++) {
+          var log = result.logs[i]
+          if (log.event == 'HippoEvent') {
+            // We found the event!
+            var value = log.args._maxPlayers.c[0]
+            console.log(log)
+            var maxplayers_element = document.getElementById('maxplayers')
+            maxplayers_element.innerHTML = value.valueOf()
+            break
+          }
+        } */
+      }).catch(function (e) {
+        console.log(e)
+        self.setStatus('Error sending transaction; see log.')
+      })
+
   },
 
   setStatus: function (message) {
@@ -112,13 +138,13 @@ window.App = {
 
     this.setStatus('Initiating transaction... (please wait)')
 
-    var hippo
-    Hippodrome.deployed().then(function (instance) {
-      hippo = instance
-      return hippo.bet(horseNumber, web3.toWei(1, 'ether'), {
-        from: account
+
+    hippo.bet(horseNumber, {
+            gas: 300000,
+            from: account,
+            value: web3.toWei(1, 'ether')
       })
-    }).then(function (result) {
+    .then(function (result) {
       self.setStatus('Transaction complete!')
       // result is an object with the following values:
       //

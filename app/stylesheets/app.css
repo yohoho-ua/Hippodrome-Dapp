@@ -1,52 +1,28 @@
 body {
-  margin-left: 25%;
-  margin-right: 25%;
-  margin-top: 10%;
-  font-family: "Open Sans", sans-serif;
+  background-color:#F0F0F0;
+  padding: 2em;
+  font-family: 'Raleway','Source Sans Pro', 'Arial';
 }
-
+.container {
+  width: 50%;
+  margin: 0 auto;
+  margin-left: 3em;
+  margin-bottom: 1em;
+}
 label {
-  display: inline-block;
-  width: 100px;
+  display:block;
+  margin-bottom:10px;
 }
-
 input {
-  width: 500px;
-  padding: 5px;
-  font-size: 16px;
+  padding:10px;
+  width: 50%;
+  margin-bottom: 1em;
 }
-
 button {
-  font-size: 16px;
-  padding: 5px;
+  margin: 2em 0;
+  padding: 1em 4em;
+  display:block;
 }
-
-h1, h2 {
-  display: inline-block;
-  vertical-align: middle;
-  margin-top: 0px;
-  margin-bottom: 10px;
-}
-
-h2 {
-  color: #AAA;
-  font-size: 32px;
-}
-
-h3 {
-  font-weight: normal;
-  color: #AAA;
-  font-size: 24px;
-}
-
-.black {
-  color: black;
-}
-
-#balance {
-  color: black;
-}
-
-.hint {
-  color: #666;
+.horse_number {
+  font-size: smaller;
 }

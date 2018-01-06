@@ -22,14 +22,14 @@ contract Hippodrome is Owned {
    address owner;
 
 uint public raceId = 0;
-uint public minimumBet;
+uint public minimumBet = 100000000;
 uint public totalBet;
 uint public numberOfBets;
 uint public maxPlayers = 10;
 address[] players;
 
 struct Player {
-   uint amountBet;
+   uint betAmount;
    uint horseSelected;
 }
 
@@ -71,7 +71,7 @@ function bet(uint horseNumber) payable {
 
    require(horseNumber >= 1 && horseNumber <= 5);
    require(msg.value >= minimumBet);
-   playerInfo[msg.sender].amountBet = msg.value;
+   playerInfo[msg.sender].betAmount = msg.value;
    playerInfo[msg.sender].horseSelected = horseNumber;
    numberOfBets += 1;
    players.push(msg.sender);
