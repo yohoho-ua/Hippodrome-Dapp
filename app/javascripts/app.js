@@ -18,13 +18,18 @@ var Hippodrome = contract(hippodrome_artifacts)
 // For application bootstrapping, check out window.addEventListener below.
 var accounts
 var account
+var hippo
 
 window.App = {
   start: function () {
     var self = this
 
     // Bootstrap the MetaCoin abstraction for Use.
-    Hippodrome.setProvider(web3.currentProvider);
+    Hippodrome.setProvider(web3.currentProvider)
+
+    Hippodrome.deployed().then(function (instance) {
+      hippo = instance
+    })
 
     // Get the initial account balance so it can be displayed.
     web3.eth.getAccounts(function (err, accs) {
@@ -41,10 +46,15 @@ window.App = {
       accounts = accs
       account = accounts[0]
       console.log(account)
-    });
+    })
 
-    //self.updateMaxPlayers()
-    //self.updateCurrentAcc()
+    // instance.getValue().then(function(val) {
+      // val reprsents the `value` storage object in the solidity contract
+      // since the contract returns that value.
+    // });
+
+    // self.updateMaxPlayers()
+    // self.updateCurrentAcc()
     // self.refreshAccount();
     // var hippoEvent = Hippodrome.HippoEvent({}, 'latest');
     // hippoEvent.watch(function (error, result) {
@@ -61,19 +71,6 @@ window.App = {
     status.innerHTML = message
   },
 
-  updateMaxPlayers: function () {
-    var hippo
-    Hippodrome.deployed().then(function (instance) {
-      hippo = instance
-      return hippo.getMaxPlayers.call()
-    }).then(function (value) {
-      var maxplayers_element = document.getElementById('maxplayers')
-      maxplayers_element.innerHTML = value.valueOf()
-    }).catch(function (e) {
-      console.log(e)
-    })
-  },
-
   updateCurrentAcc: function () {
     var curr_acc_element = document.getElementById('acc')
     curr_acc_element.innerHTML = account.valueOf()
@@ -85,30 +82,26 @@ window.App = {
     var amount = parseInt(document.getElementById('maxPlayersInput').value)
     this.setStatus('Initiating transaction... (please wait)')
 
-    var hippo
-    Hippodrome.deployed().then(function (instance) {
-      hippo = instance
-      return hippo.setMaxPlayers(amount, {
-        from: account
-      })
-    }).then(function (result) {
+    hippo.setMaxPlayers(amount, { from: account })
+    .then(function (result) {
       self.setStatus('Transaction complete!')
-      // self.updateAll();
-      for (var i = 0; i < result.logs.length; i++) {
+      self.updateAll(result)
+
+      /* for (var i = 0; i < result.logs.length; i++) {
         var log = result.logs[i]
         if (log.event == 'HippoEvent') {
           // We found the event!
-          var value = log.args._maxPlayers.c[0];
-          console.log(value);
-          var maxplayers_element = document.getElementById('maxplayers');
-          maxplayers_element.innerHTML = value.valueOf();
-          break;
+          var value = log.args._maxPlayers.c[0]
+          console.log(log)
+          var maxplayers_element = document.getElementById('maxplayers')
+          maxplayers_element.innerHTML = value.valueOf()
+          break
         }
-      }
+      } */
     }).catch(function (e) {
       console.log(e)
       self.setStatus('Error sending transaction; see log.')
-    });
+    })
   },
 
   bet: function () {
@@ -139,7 +132,7 @@ window.App = {
         if (log.event == 'HippoEvent') {
           // We found the event!
           console.log(log)
-          break;
+          break
         }
       }
     }).catch(function (e) {
@@ -148,10 +141,27 @@ window.App = {
     })
   },
 
-  updateAll: function () {
-    var self = this
-    self.updateMaxPlayers()
-    self.updateCurrentAcc()
+  updateAll: function (result) {
+    for (var i = 0; i < result.logs.length; i++) {
+      var log = result.logs[i]
+      if (log.event == 'HippoEvent') {
+        // We found the event!
+        console.log(log)
+        var minimumBet = log.args._minimumBet.c[0]
+        var totalBet = log.args._totalBet.c[0]
+        var numberOfBets = log.args._numberOfBets.c[0]
+        var maxPalayers = log.args._maxPlayers.c[0]
+        var raceId = log.args._raceId.c[0]
+        console.log(raceId, minimumBet, totalBet, numberOfBets, maxPalayers)
+        document.getElementById('minimumBet').innerHTML = minimumBet.valueOf()
+        document.getElementById('totalBet').innerHTML = totalBet.valueOf()
+        document.getElementById('numberOfBets').innerHTML = numberOfBets.valueOf()
+        document.getElementById('maxPlayers').innerHTML = maxPalayers.valueOf()
+        document.getElementById('raceId').innerHTML = raceId.valueOf()
+        this.updateCurrentAcc();
+        break
+      }
+    }
   }
 
 }
