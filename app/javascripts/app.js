@@ -1,108 +1,169 @@
 // Import the page's CSS. Webpack will know what to do with it.
-import "../stylesheets/app.css";
+import '../stylesheets/app.css'
 
 // Import libraries we need.
-import { default as Web3} from 'web3';
+import { default as Web3 } from 'web3'
 import { default as contract } from 'truffle-contract'
 
 // Import our contract artifacts and turn them into usable abstractions.
-import metacoin_artifacts from '../../build/contracts/MetaCoin.json'
+// import metacoin_artifacts from '../../build/contracts/MetaCoin.json'
+import hippodrome_artifacts from '../../build/contracts/Hippodrome.json'
 
 // MetaCoin is our usable abstraction, which we'll use through the code below.
-var MetaCoin = contract(metacoin_artifacts);
+// var MetaCoin = contract(metacoin_artifacts);
+var Hippodrome = contract(hippodrome_artifacts)
 
 // The following code is simple to show off interacting with your contracts.
 // As your needs grow you will likely need to change its form and structure.
 // For application bootstrapping, check out window.addEventListener below.
-var accounts;
-var account;
+var accounts
+var account
 
 window.App = {
-  start: function() {
-    var self = this;
+  start: function () {
+    var self = this
 
     // Bootstrap the MetaCoin abstraction for Use.
-    MetaCoin.setProvider(web3.currentProvider);
+    Hippodrome.setProvider(web3.currentProvider)
 
     // Get the initial account balance so it can be displayed.
-    web3.eth.getAccounts(function(err, accs) {
+    web3.eth.getAccounts(function (err, accs) {
       if (err != null) {
-        alert("There was an error fetching your accounts.");
-        return;
+        alert('There was an error fetching your accounts.')
+        return
       }
 
       if (accs.length == 0) {
-        alert("Couldn't get any accounts! Make sure your Ethereum client is configured correctly.");
-        return;
+        alert("Couldn't get any accounts! Make sure your Ethereum client is configured correctly.")
+        return
       }
 
-      accounts = accs;
-      account = accounts[0];
+      accounts = accs
+      account = accounts[0]
+      console.log(account)
+    })
 
-      self.refreshBalance();
-      self.refreshAccount()
-    });
+    //self.updateMaxPlayers()
+    //self.updateCurrentAcc()
+    // self.refreshAccount();
+    var hippoEvent = Hippodrome.HippoEvent({}, 'latest')
+    hippoEvent.watch(function (error, result) {
+      if (!error) {
+        console.log('hippoEvent')
+      } else {
+        console.log(error)
+      }
+    })
   },
 
-  setStatus: function(message) {
-    var status = document.getElementById("status");
-    status.innerHTML = message;
+  setStatus: function (message) {
+    var status = document.getElementById('status')
+    status.innerHTML = message
   },
 
-  refreshBalance: function() {
-    var self = this;
-
-    var meta;
-    MetaCoin.deployed().then(function(instance) {
-      meta = instance;
-      return meta.getBalance.call(account, {from: account});
-    }).then(function(value) {
-      var balance_element = document.getElementById("balance");
-      balance_element.innerHTML = value.valueOf();
-    }).catch(function(e) {
-      console.log(e);
-      self.setStatus("Error getting balance; see log.");
-    });
+  updateMaxPlayers: function () {
+    var hippo
+    Hippodrome.deployed().then(function (instance) {
+      hippo = instance
+      return hippo.getMaxPlayers.call()
+    }).then(function (value) {
+      var maxplayers_element = document.getElementById('maxplayers')
+      maxplayers_element.innerHTML = value.valueOf()
+    }).catch(function (e) {
+      console.log(e)
+    })
   },
 
-  refreshAccount: function() {
-      var account_element = document.getElementById("account");
-      account_element.innerHTML = account.valueOf();
+  updateCurrentAcc: function () {
+    var curr_acc_element = document.getElementById('acc')
+    curr_acc_element.innerHTML = account.valueOf()
   },
 
-  sendCoin: function() {
-    var self = this;
+  setMaxPlayers: function () {
+    var self = this
 
-    var amount = parseInt(document.getElementById("amount").value);
-    var receiver = document.getElementById("receiver").value;
+    var amount = parseInt(document.getElementById('maxPlayersInput').value)
+    this.setStatus('Initiating transaction... (please wait)')
 
-    this.setStatus("Initiating transaction... (please wait)");
+    var hippo
+    Hippodrome.deployed().then(function (instance) {
+      hippo = instance
+      return hippo.setMaxPlayers(amount, {
+        from: account
+      })
+    }).then(function (result) {
+      self.setStatus('Transaction complete!')
+      // self.updateAll();
+      for (var i = 0; i < result.logs.length; i++) {
+        var log = result.logs[i]
+        if (log.event == 'HippoEvent') {
+          // We found the event!
+          console.log(log.args._maxPlayers)
+          break
+        }
+      }
+    }).catch(function (e) {
+      console.log(e)
+      self.setStatus('Error sending transaction; see log.')
+    })
+  },
 
-    var meta;
-    MetaCoin.deployed().then(function(instance) {
-      meta = instance;
-      return meta.sendCoin(receiver, amount, {from: account});
-    }).then(function() {
-      self.setStatus("Transaction complete!");
-      self.refreshBalance();
-    }).catch(function(e) {
-      console.log(e);
-      self.setStatus("Error sending coin; see log.");
-    });
+  bet: function () {
+    var self = this
+
+    var horseNumber = parseInt(document.getElementById('horseNumber').value)
+    // var receiver = document.getElementById("receiver").value;
+
+    this.setStatus('Initiating transaction... (please wait)')
+
+    var hippo
+    Hippodrome.deployed().then(function (instance) {
+      hippo = instance
+      return hippo.bet(horseNumber, web3.toWei(1, 'ether'), {
+        from: account
+      })
+    }).then(function (result) {
+      self.setStatus('Transaction complete!')
+      // result is an object with the following values:
+      //
+      // result.tx      => transaction hash, string
+      // result.logs    => array of decoded events that were triggered within this transaction
+      // result.receipt => transaction receipt object, which includes gas used
+
+      // We can loop through result.logs to see if we triggered the Transfer event.
+      for (var i = 0; i < result.logs.length; i++) {
+        var log = result.logs[i]
+        if (log.event == 'HippoEvent') {
+          // We found the event!
+          console.log(log)
+          break
+        }
+      }
+    }).catch(function (e) {
+      console.log(e)
+      self.setStatus('Error sending transaction; see log.')
+    })
+  },
+
+  updateAll: function () {
+    var self = this
+    self.updateMaxPlayers()
+    self.updateCurrentAcc()
   }
-};
 
-window.addEventListener('load', function() {
+}
+
+window.addEventListener('load', function () {
   // Checking if Web3 has been injected by the browser (Mist/MetaMask)
   if (typeof web3 !== 'undefined') {
     console.warn("Using web3 detected from external source. If you find that your accounts don't appear or you have 0 MetaCoin, ensure you've configured that source properly. If using MetaMask, see the following link. Feel free to delete this warning. :) http://truffleframework.com/tutorials/truffle-and-metamask")
     // Use Mist/MetaMask's provider
-    window.web3 = new Web3(web3.currentProvider);
+    window.web3 = new Web3(web3.currentProvider)
   } else {
-    console.warn("No web3 detected. Falling back to http://127.0.0.1:9545. You should remove this fallback when you deploy live, as it's inherently insecure. Consider switching to Metamask for development. More info here: http://truffleframework.com/tutorials/truffle-and-metamask");
+    console.warn("No web3 detected. Falling back to http://127.0.0.1:9545. You should remove this fallback when you deploy live, as it's inherently insecure. Consider switching to Metamask for development. More info here: http://truffleframework.com/tutorials/truffle-and-metamask")
     // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
-    window.web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:9545"));
+    window.web3 = new Web3(new Web3.providers.HttpProvider('http://127.0.0.1:9545'))
   }
 
-  App.start();
-});
+  App.start()
+})

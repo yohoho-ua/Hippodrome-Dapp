@@ -25,7 +25,7 @@ uint public raceId = 0;
 uint public minimumBet;
 uint public totalBet;
 uint public numberOfBets;
-uint public maxAmountOfBets = 10;
+uint public maxPlayers = 10;
 address[] players;
 
 struct Player {
@@ -39,15 +39,16 @@ mapping(address => Player) playerInfo;
 
 function Hippodrome(uint _minimumBet) {
    owner = msg.sender;
-   if(_minimumBet > 0 ) minimumBet = _minimumBet;
+   if (_minimumBet > 0 ) 
+   minimumBet = _minimumBet;
 }
 
-event hippoEvent(
-    uint raceId,
-    uint minimumBet,
-    uint totalBet,
-    uint numberOfBets,
-    uint maxAmountOfBets
+event HippoEvent(
+    uint _raceId,
+    uint _minimumBet,
+    uint _totalBet,
+    uint _numberOfBets,
+    uint _maxPlayers
     );
     
 event results (
@@ -55,10 +56,13 @@ event results (
     uint raceId
     );
 
-function setMaxAmountOfBets(uint _maxAmountOfBets) onlyOwner public {
-       maxAmountOfBets = _maxAmountOfBets;
-       hippoEvent(raceId, minimumBet, totalBet, numberOfBets, maxAmountOfBets);
+function setMaxPlayers(uint _maxPlayers) onlyOwner public {
+       maxPlayers = _maxPlayers;
+       HippoEvent(raceId, minimumBet, totalBet, numberOfBets, maxPlayers);
    }
+function getMaxPlayers() public view returns (uint) {
+    return maxPlayers;
+}
 
 // To bet for a horse between 1 and 5 both inclusive
 function bet(uint horseNumber) payable {
@@ -72,13 +76,15 @@ function bet(uint horseNumber) payable {
    numberOfBets += 1;
    players.push(msg.sender);
    totalBet += msg.value;
-   if(numberOfBets >= maxAmountOfBets) generateHorseWinner();
-   hippoEvent(raceId, minimumBet, totalBet, numberOfBets, maxAmountOfBets);
+   if (numberOfBets >= maxPlayers)
+   generateHorseWinner();
+   HippoEvent(raceId, minimumBet, totalBet, numberOfBets, maxPlayers);
 }
 
 function checkPlayerExists(address player) constant returns(bool) {
-   for(uint i = 0; i < players.length; i++) {
-      if(players[i] == player) return true;
+   for (uint i = 0; i < players.length; i++) {
+      if (players[i] == player) 
+      return true;
    }
    return false;
 }
@@ -93,9 +99,9 @@ function generateHorseWinner() {
 function distributePrizes(uint horseNumberWinner) {
    address[100] memory winners; // We have to create a temporary in memory array with fixed size
    uint count = 0; // This is the count for the array of winners
-   for(uint i = 0; i < players.length; i++) {
+   for (uint i = 0; i < players.length; i++) {
       address playerAddress = players[i];
-      if(playerInfo[playerAddress].horseSelected == horseNumberWinner) {
+      if (playerInfo[playerAddress].horseSelected == horseNumberWinner) {
          winners[count] = playerAddress;
          count++;
          resetData();
@@ -104,7 +110,7 @@ function distributePrizes(uint horseNumberWinner) {
    }
    players.length = 0; // Delete all the players array
    uint winnerEtherAmount = totalBet / winners.length; // How much each winner gets
-   for(uint j = 0; j < count; j++) {
+   for (uint j = 0; j < count; j++) {
       if(winners[j] != address(0)) // Check at least one winner exists
          winners[j].transfer(winnerEtherAmount);
    }

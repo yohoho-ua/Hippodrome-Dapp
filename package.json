@@ -2,11 +2,11 @@
   "name": "hippodrome-dapp",
   "version": "0.0.1",
   "description": "Simple dapp",
-  "main": "index.html",
+  "main": "app/index.html",
   "scripts": {
     "lint": "eslint ./",
     "build": "webpack",
-    "dev": "lite-server",
+    "dev": "webpack-dev-server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
