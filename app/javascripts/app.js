@@ -46,6 +46,13 @@ window.App = {
       accounts = accs
       account = accounts[0]
      // console.log(account)
+
+     var accountInterval = setInterval(function() {
+      if (web3.eth.defaultAccount!== account) {
+        account = web3.eth.accounts[0];
+        window.App.updateCurrentAcc();
+       }
+    }, 1000);
     })
 
         // instance.getValue().then(function(val) {
