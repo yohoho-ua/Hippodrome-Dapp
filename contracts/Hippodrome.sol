@@ -29,8 +29,9 @@ uint public maxPlayers = 10;
 address[] players;
 
 struct Player {
-   uint betAmount;
-   uint horseSelected;
+   mapping(uint => uint) betsInfo;
+  // uint betAmount;
+ //  uint horseSelected;
 }
 
 mapping(address => Player) playerInfo;
@@ -71,12 +72,13 @@ function getMaxPlayers() public view returns (uint) {
 // To bet for a horse between 1 and 5 both inclusive
 function bet(uint horseNumber) payable {
     //if player has made his bet 
-   require(checkPlayerExists(msg.sender) == false);
+ //  require(checkPlayerExists(msg.sender) == false);
 
    require(horseNumber >= 1 && horseNumber <= 5);
    require(msg.value >= minimumBet);
-   playerInfo[msg.sender].betAmount = msg.value;
-   playerInfo[msg.sender].horseSelected = horseNumber;
+   playerInfo[msg.sender].betsInfo[horseNumber] += msg.value;
+ //  playerInfo[msg.sender].betAmount = msg.value;
+ //  playerInfo[msg.sender].horseSelected = horseNumber;
    numberOfBets += 1;
    players.push(msg.sender);
    totalBet += msg.value;
@@ -85,13 +87,13 @@ function bet(uint horseNumber) payable {
    HippoEvent(raceId, minimumBet, totalBet, numberOfBets, maxPlayers);
 }
 
-function checkPlayerExists(address player) constant returns(bool) {
-   for (uint i = 0; i < players.length; i++) {
-      if (players[i] == player) 
-      return true;
-   }
-   return false;
-}
+//function checkPlayerExists(address player) constant returns(bool) {
+ //  for (uint i = 0; i < players.length; i++) {
+ //     if (players[i] == player) 
+ //     return true;
+ //  }
+ //  return false;
+//}
 
 // Generates a horseNumber between 1 and 5
 function generateHorseWinner() {
