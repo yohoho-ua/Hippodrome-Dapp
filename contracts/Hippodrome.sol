@@ -27,13 +27,16 @@ uint public totalBet;
 uint public numberOfBets;
 uint public maxPlayers = 10;
 address[] players;
+address[] winners; 
 
 struct Player {
-   uint betAmount;
-   uint horseSelected;
+   mapping(uint => uint) betsInfo;
+//   uint betAmount;
+//   uint horseSelected;
 }
 
 mapping(address => Player) playerInfo;
+mapping(address => uint) winnersInfo;
 
 
 
@@ -71,12 +74,12 @@ function getMaxPlayers() public view returns (uint) {
 // To bet for a horse between 1 and 5 both inclusive
 function bet(uint horseNumber) payable {
     //if player has made his bet 
-   require(checkPlayerExists(msg.sender) == false);
+  // require(checkPlayerExists(msg.sender) == false);
 
    require(horseNumber >= 1 && horseNumber <= 5);
    require(msg.value >= minimumBet);
-   playerInfo[msg.sender].betAmount = msg.value;
-   playerInfo[msg.sender].horseSelected = horseNumber;
+   playerInfo[msg.sender].betsInfo[horseNumber] += msg.value;
+ //  playerInfo[msg.sender].horseSelected = horseNumber;
    numberOfBets += 1;
    players.push(msg.sender);
    totalBet += msg.value;
@@ -99,13 +102,18 @@ function generateHorseWinner() {
    distributePrizes(horseNumberGenerated);
 }
 
-// Sends the corresponding ether to each winner depending on the total bets
-function distributePrizes(uint horseNumberWinner) {
-   address[100] memory winners; // We have to create a temporary in memory array with fixed size
+//Fill array and mapping of winners with addresses and bets
+function _setWinners (uint horseNumberWinner) returns (uint){  
+uint totalWinnersSum;
+//address[100] memory winners; // We have to create a temporary in memory array with fixed size
    uint count = 0; // This is the count for the array of winners
    for (uint i = 0; i < players.length; i++) {
       address playerAddress = players[i];
-      if (playerInfo[playerAddress].horseSelected == horseNumberWinner) {
+      uint betSum = playerInfo[playerAddress].betsInfo[horseNumberWinner];//checks if bet was made by player
+      if(betSum!=0){
+      totalWinnersSum+=betSum; //calculates total sum for winning horse 
+      winnersInfo[playerAddress]=betSum; //connects addresses of winners and bets
+    //  if (playerInfo[playerAddress].horseSelected == horseNumberWinner) {
          winners[count] = playerAddress;
          count++;
          resetData();
@@ -113,8 +121,16 @@ function distributePrizes(uint horseNumberWinner) {
       delete playerInfo[playerAddress]; // Delete all the players
    }
    players.length = 0; // Delete all the players array
-   uint winnerEtherAmount = totalBet / winners.length; // How much each winner gets
-   for (uint j = 0; j < count; j++) {
+   return totalWinnersSum;
+}
+
+
+// Sends the corresponding ether to each winner depending on the total bets
+function distributePrizes(uint horseNumberWinner) {
+   uint totalWinnersSum = _setWinners(horseNumberWinner); //gets total sum for winning horse
+   // uint winnerEtherAmount = totalBet / winners.length; // How much each winner gets
+   for (uint j = 0; j < winners.length; j++) {
+     uint winnerEtherAmount = totalBet/100*(winnersInfo[winners[j]]*100/totalWinnersSum);// How much each winner gets
       if(winners[j] != address(0)) // Check at least one winner exists
          winners[j].transfer(winnerEtherAmount);
    }
