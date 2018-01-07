@@ -24,14 +24,14 @@ window.App = {
   start: function () {
     var self = this
 
-    // Bootstrap the MetaCoin abstraction for Use.
+        // Bootstrap the MetaCoin abstraction for Use.
     Hippodrome.setProvider(web3.currentProvider)
 
     Hippodrome.deployed().then(function (instance) {
       hippo = instance
     })
 
-    // Get the initial account balance so it can be displayed.
+        // Get the initial account balance so it can be displayed.
     web3.eth.getAccounts(function (err, accs) {
       if (err != null) {
         alert('There was an error fetching your accounts.')
@@ -45,51 +45,72 @@ window.App = {
 
       accounts = accs
       account = accounts[0]
-      console.log(account)
+     // console.log(account)
     })
 
-    // instance.getValue().then(function(val) {
-      // val reprsents the `value` storage object in the solidity contract
-      // since the contract returns that value.
-    // });
+        // instance.getValue().then(function(val) {
+        // val reprsents the `value` storage object in the solidity contract
+        // since the contract returns that value.
+        // });
 
-    // self.updateMaxPlayers()
-    // self.updateCurrentAcc()
-    // self.refreshAccount();
-    // var hippoEvent = Hippodrome.HippoEvent({}, 'latest');
-    // hippoEvent.watch(function (error, result) {
-    //   if (!error) {
-    //     console.log('hippoEvent');
-    //   } else {
-    //     console.log(error);
-    //   }
-    // });
+        // self.updateMaxPlayers()
+        // self.updateCurrentAcc()
+        // self.refreshAccount();
+        // var hippoEvent = Hippodrome.HippoEvent({}, 'latest');
+        // hippoEvent.watch(function (error, result) {
+        //   if (!error) {
+        //     console.log('hippoEvent');
+        //   } else {
+        //     console.log(error);
+        //   }
+        // });
 
+        
+          // hippo.minimumBet.call(function(err, result) {
+          //    if(result != null){
+          //      console.log(result)
+          //    }
+          // })
 
-      var amount = parseInt(document.getElementById('maxPlayersInput').value)
-      this.setStatus('Initiating transaction... (please wait)')
+          Hippodrome.deployed().then(function(deployed) {
+            return deployed.totalBet();
+            }).then(function (result) {
+              console.log(result.c[0]);
+            })
 
-      hippo.minimumBet(amount, { from: account })
-      .then(function (result) {
-        self.setStatus('Transaction complete!')
-        self.updateAll(result)
+            Hippodrome.deployed().then(function(deployed) {
+              return deployed.info();
+              }).then(function (result) {
+                console.log(result);
+              })
 
-        /* for (var i = 0; i < result.logs.length; i++) {
-          var log = result.logs[i]
-          if (log.event == 'HippoEvent') {
-            // We found the event!
-            var value = log.args._maxPlayers.c[0]
-            console.log(log)
-            var maxplayers_element = document.getElementById('maxplayers')
-            maxplayers_element.innerHTML = value.valueOf()
-            break
-          }
-        } */
-      }).catch(function (e) {
-        console.log(e)
-        self.setStatus('Error sending transaction; see log.')
-      })
+          
+        
+        
+          // this.state.ContractInstance.totalBet((err, result) => {
+          //    if(result != null){
+          //       this.setState({
+          //          totalBet: parseFloat(web3.fromWei(result, 'ether'))
+          //       })
+          //    }
+          // })
+          // this.state.ContractInstance.numberOfBets((err, result) => {
+          //    if(result != null){
+          //       this.setState({
+          //          numberOfBets: parseInt(result)
+          //       })
+          //    }
+          // })
+          // this.state.ContractInstance.maxAmountOfBets((err, result) => {
+          //    if(result != null){
+          //       this.setState({
+          //          maxAmountOfBets: parseInt(result)
+          //       })
+          //    }
+          // })
+       
 
+    //console.log(Hippodrome.deployed().minimumBet.call());
   },
 
   setStatus: function (message) {
@@ -109,87 +130,38 @@ window.App = {
     this.setStatus('Initiating transaction... (please wait)')
 
     hippo.setMaxPlayers(amount, { from: account })
-    .then(function (result) {
-      self.setStatus('Transaction complete!')
-      self.updateAll(result)
-
-      /* for (var i = 0; i < result.logs.length; i++) {
-        var log = result.logs[i]
-        if (log.event == 'HippoEvent') {
-          // We found the event!
-          var value = log.args._maxPlayers.c[0]
-          console.log(log)
-          var maxplayers_element = document.getElementById('maxplayers')
-          maxplayers_element.innerHTML = value.valueOf()
-          break
-        }
-      } */
-    }).catch(function (e) {
-      console.log(e)
-      self.setStatus('Error sending transaction; see log.')
-    })
+            .then(function (result) {
+              self.setStatus('Transaction complete!')
+              self.updateAll(result)
+            }).catch(function (e) {
+              console.log(e)
+              self.setStatus('Error sending transaction; see log.')
+            })
   },
 
   bet: function () {
     var self = this
     var horseNumber = parseInt(document.getElementById('horseNumber').value)
     this.setStatus('Initiating transaction... (please wait)')
-<<<<<<< HEAD
-
-
     hippo.bet(horseNumber, {
-            gas: 300000,
-            from: account,
-            value: web3.toWei(1, 'ether')
-      })
-    .then(function (result) {
-      self.setStatus('Transaction complete!')
-=======
-    hippo.bet(horseNumber, {from: account})
-    .then(function(result){
-     self.setStatus('Transaction complete!')
-     self.updateAll(result)
+      gas: 300000,
+      from: account,
+      value: web3.toWei(1, 'ether')
     })
-    .catch(function (e) {
-     console.log(e)
-     self.setStatus('Error sending transaction; see log.')
-    })
-    },
-    // var hippo
-    // Hippodrome.deployed().then(function (instance) {
-    //   hippo = instance
-    //   return hippo.bet(horseNumber, web3.toWei(1, 'ether'), {
-    //     from: account
-    //   })
-    // }).then(function (result) {
-    //   self.setStatus('Transaction complete!')
->>>>>>> f1f40215cecfdeed02898b7675dcc4b1fc07d11b
-      // result is an object with the following values:
-      //
-      // result.tx      => transaction hash, string
-      // result.logs    => array of decoded events that were triggered within this transaction
-      // result.receipt => transaction receipt object, which includes gas used
-
-      // We can loop through result.logs to see if we triggered the Transfer event.
-  //     for (var i = 0; i < result.logs.length; i++) {
-  //       var log = result.logs[i]
-  //       if (log.event == 'HippoEvent') {
-  //         // We found the event!
-  //         console.log(log)
-  //         break
-  //       }
-  //     }
-  //   }).catch(function (e) {
-  //     console.log(e)
-  //     self.setStatus('Error sending transaction; see log.')
-  //   })
-  // },
+            .then(function (result) {
+              self.updateAll(result)
+            })
+            .catch(function (e) {
+              console.log(e)
+              self.setStatus('Error sending transaction; see log.')
+            })
+  },
 
   updateAll: function (result) {
     for (var i = 0; i < result.logs.length; i++) {
       var log = result.logs[i]
       if (log.event == 'HippoEvent') {
-        // We found the event!
+                // We found the event!
         console.log(log)
         var minimumBet = log.args._minimumBet.c[0]
         var totalBet = log.args._totalBet.c[0]
@@ -202,7 +174,7 @@ window.App = {
         document.getElementById('numberOfBets').innerHTML = numberOfBets.valueOf()
         document.getElementById('maxPlayers').innerHTML = maxPalayers.valueOf()
         document.getElementById('raceId').innerHTML = raceId.valueOf()
-        this.updateCurrentAcc();
+        this.updateCurrentAcc()
         break
       }
     }
@@ -211,14 +183,14 @@ window.App = {
 }
 
 window.addEventListener('load', function () {
-  // Checking if Web3 has been injected by the browser (Mist/MetaMask)
+    // Checking if Web3 has been injected by the browser (Mist/MetaMask)
   if (typeof web3 !== 'undefined') {
     console.warn("Using web3 detected from external source. If you find that your accounts don't appear or you have 0 MetaCoin, ensure you've configured that source properly. If using MetaMask, see the following link. Feel free to delete this warning. :) http://truffleframework.com/tutorials/truffle-and-metamask")
-    // Use Mist/MetaMask's provider
+        // Use Mist/MetaMask's provider
     window.web3 = new Web3(web3.currentProvider)
   } else {
     console.warn("No web3 detected. Falling back to http://127.0.0.1:9545. You should remove this fallback when you deploy live, as it's inherently insecure. Consider switching to Metamask for development. More info here: http://truffleframework.com/tutorials/truffle-and-metamask")
-    // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
+        // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
     window.web3 = new Web3(new Web3.providers.HttpProvider('http://127.0.0.1:9545'))
   }
 

@@ -56,6 +56,10 @@ event results (
     uint raceId
     );
 
+function info() public constant {
+    HippoEvent(raceId, minimumBet, totalBet, numberOfBets, maxPlayers);
+}
+
 function setMaxPlayers(uint _maxPlayers) onlyOwner public {
        maxPlayers = _maxPlayers;
        HippoEvent(raceId, minimumBet, totalBet, numberOfBets, maxPlayers);
