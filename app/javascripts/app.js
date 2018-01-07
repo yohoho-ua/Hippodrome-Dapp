@@ -6,11 +6,9 @@ import { default as Web3 } from 'web3'
 import { default as contract } from 'truffle-contract'
 
 // Import our contract artifacts and turn them into usable abstractions.
-// import metacoin_artifacts from '../../build/contracts/MetaCoin.json'
 import hippodrome_artifacts from '../../build/contracts/Hippodrome.json'
 
 // MetaCoin is our usable abstraction, which we'll use through the code below.
-// var MetaCoin = contract(metacoin_artifacts);
 var Hippodrome = contract(hippodrome_artifacts)
 
 // The following code is simple to show off interacting with your contracts.
@@ -24,14 +22,14 @@ window.App = {
   start: function () {
     var self = this
 
-        // Bootstrap the MetaCoin abstraction for Use.
+        // Bootstrap the Hippodrome abstraction for Use.
     Hippodrome.setProvider(web3.currentProvider)
 
     Hippodrome.deployed().then(function (instance) {
       hippo = instance
     })
 
-        // Get the initial account balance so it can be displayed.
+        // Get the initial account so it can be displayed.
     web3.eth.getAccounts(function (err, accs) {
       if (err != null) {
         alert('There was an error fetching your accounts.')
@@ -45,7 +43,6 @@ window.App = {
 
       accounts = accs
       account = accounts[0]
-     // console.log(account)
 
      var accountInterval = setInterval(function() {
       if (web3.eth.defaultAccount!== account) {
@@ -54,30 +51,6 @@ window.App = {
        }
     }, 1000);
     })
-
-        // instance.getValue().then(function(val) {
-        // val reprsents the `value` storage object in the solidity contract
-        // since the contract returns that value.
-        // });
-
-        // self.updateMaxPlayers()
-        // self.updateCurrentAcc()
-        // self.refreshAccount();
-        // var hippoEvent = Hippodrome.HippoEvent({}, 'latest');
-        // hippoEvent.watch(function (error, result) {
-        //   if (!error) {
-        //     console.log('hippoEvent');
-        //   } else {
-        //     console.log(error);
-        //   }
-        // });
-
-        
-          // hippo.minimumBet.call(function(err, result) {
-          //    if(result != null){
-          //      console.log(result)
-          //    }
-          // })
 
           Hippodrome.deployed().then(function(deployed) {
             return deployed.totalBet();
@@ -90,34 +63,6 @@ window.App = {
               }).then(function (result) {
                 console.log(result);
               })
-
-          
-        
-        
-          // this.state.ContractInstance.totalBet((err, result) => {
-          //    if(result != null){
-          //       this.setState({
-          //          totalBet: parseFloat(web3.fromWei(result, 'ether'))
-          //       })
-          //    }
-          // })
-          // this.state.ContractInstance.numberOfBets((err, result) => {
-          //    if(result != null){
-          //       this.setState({
-          //          numberOfBets: parseInt(result)
-          //       })
-          //    }
-          // })
-          // this.state.ContractInstance.maxAmountOfBets((err, result) => {
-          //    if(result != null){
-          //       this.setState({
-          //          maxAmountOfBets: parseInt(result)
-          //       })
-          //    }
-          // })
-       
-
-    //console.log(Hippodrome.deployed().minimumBet.call());
   },
 
   setStatus: function (message) {
