@@ -181,7 +181,7 @@ window.App = {
         document.getElementById('numberOfBets').innerHTML = numberOfBets.valueOf()
         document.getElementById('maxPlayers').innerHTML = maxPalayers.valueOf()
         document.getElementById('raceId').innerHTML = raceId.valueOf()
-        this.updateCurrentAcc()
+       // this.updateCurrentAcc()
         break
       }
     }
