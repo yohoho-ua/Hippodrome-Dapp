@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <!-- <link rel="stylesheet" type="text/css" href="/app.css"> -->
+
+	<script src="./app.js"></script>
+
+</head>
+<body>
+<div class="container">
+
+	<h1>Hippodrome</h1> 
+
+    <table align="left" width="120" border="1">
+        <tbody>
+        <tr>
+            <td>Storm</td>
+            <td>Wind</td>
+            <td>Speedy</td>
+            <td>Winner</td>
+			<td>Cutie</td>
+        </tr>
+        <tr>
+            <td><img src="images/unicorn.jpg" width="200" height="119" alt=""/></td>
+            <td><img src="images/grey.jpg" width="200" height="119" alt=""/></td>
+            <td><img src="images/brown.jpg" width="200" height="119" alt=""/></td>
+            <td><img src="images/white.jpg" width="200" height="119" alt=""/></td>
+            <td><img src="images/black.jpg" width="200" height="119" alt=""/></td>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>2</td>
+            <td>3</td>
+            <td>4</td>
+            <td>5</td>
+        </tr>
+        <tr>
+        <td><p id="horse1" class="horse_number"></p></td>
+        <td><p id="horse2" class="horse_number"></p></td>
+        <td><p id="horse3" class="horse_number"></p></td>
+        <td><p id="horse4" class="horse_number"></p></td>
+        <td><p id="horse5" class="horse_number"></p></td>
+        </tr>
+        </tbody>
+    </table>
+    <!--<img id="loader" src="https://loading.io/spinners/double-ring/lg.double-ring-spinner.gif">-->
+  <!-- <h1 id="error" hidden>Error!</h1> -->
+    <h1 id="winner" hidden></h1>
+
+
+    <div>
+        <label for="horseNumber">Select horse</label>
+        <input id="horseNumber" type="text">
+        <button id="buttonBet" onclick="App.bet()">Bet!</button>
+    </div>
+    <div><label for="maxPlayersInput">Set max amount of bets </label>
+        <input id="maxPlayersInput" type="text">
+
+
+        <button id="buttonMaxPlayers" onclick="App.setMaxPlayers()">Set Max players</button>
+    </div>
+    <p>Minimum bet: <span id="minimumBet"></span></p>
+    <p>Total Bet:  <span id="totalBet"></span></p>
+    <p>Bets made: <span id="numberOfBets"></span></p>
+    <p>Maximum players: <span id="maxPlayers"></span></p>
+    <p>Current account: <span id="acc"></span></p>
+    <p>Race ID: <span id="raceId"></span></p>
+    <br><br>
+    <span id="status"></span>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+
+
+
+</body>
+</html>
